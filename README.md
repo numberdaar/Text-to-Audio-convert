@@ -2,171 +2,106 @@
 
 # 🎵 Text to Audio Converter
 
-[![React](https://img.shields.io/badge/React-18.2.0-blue.svg?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg?style=for-the-badge&logo=node.js)](https://nodejs.org/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-TTS-orange.svg?style=for-the-badge&logo=openai)](https://openai.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green.svg?style=for-the-badge&logo=mongodb)](https://mongodb.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+<div align="center">
 
-**Transform your text into natural-sounding speech with AI-powered voices**
+![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![React](https://img.shields.io/badge/React-18+-blue) ![OpenAI](https://img.shields.io/badge/OpenAI-TTS--1-purple) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-[🚀 Live Demo](#) • [📖 Documentation](#api-endpoints) • [🐛 Report Bug](https://github.com/yourusername/texttoaudio/issues)
+**A modern, full-stack web application that converts unlimited text to high-quality audio using OpenAI's TTS-1 model.**
+
+Built with Node.js, Express, React, and MongoDB with a beautiful, responsive UI.
+
+[🚀 Live Demo](#) • [📖 Documentation](#api-endpoints) • [🐛 Report Bug](#) • [💡 Request Feature](#)
 
 </div>
 
 ---
 
-<div align="center">
-
-![Text to Audio Converter](https://via.placeholder.com/800x400/3B82F6/FFFFFF?text=Text+to+Audio+Converter+Demo)
-
-*Beautiful, responsive interface for AI-powered text-to-speech conversion*
-
-</div>
-
 ## ✨ Features
 
 <div align="center">
 
-| 🎯 **AI Voices** | 🎵 **High Quality** | 📱 **Modern UI** | 📊 **Analytics** |
-|------------------|---------------------|------------------|------------------|
-| 6 Different Voices | OpenAI TTS Technology | Responsive Design | Usage Statistics |
-| Alloy, Echo, Fable | Natural Sounding | Beautiful Interface | Conversion History |
-| Onyx, Nova, Shimmer | Professional Audio | Mobile Friendly | Download & Share |
+| Feature | Description |
+|---------|-------------|
+| 🎯 **No Text Limit** | Convert unlimited text to audio |
+| 🎨 **Modern UI** | Beautiful, responsive design with Tailwind CSS |
+| 🎤 **Multiple Voices** | Choose from 6 different AI voices |
+| 🔊 **Real-time Preview** | Play audio directly in the browser |
+| 📥 **Download Support** | Download generated audio files |
+| 📱 **Mobile Responsive** | Works perfectly on all devices |
+| ⚡ **Fast Conversion** | Powered by OpenAI's latest TTS technology |
+| 📊 **Statistics** | View conversion stats and character count |
+| 🗄️ **Database Storage** | MongoDB Atlas for data persistence |
+| 🔒 **Secure** | Environment variables and rate limiting |
 
 </div>
-
-### 🚀 Key Features
-
-- 🎯 **6 Different AI Voices**: Choose from Alloy, Echo, Fable, Onyx, Nova, and Shimmer
-- 🎵 **High-Quality Audio**: Powered by OpenAI's advanced TTS technology
-- 📱 **Modern UI**: Beautiful, responsive interface built with React and Tailwind CSS
-- 📊 **Conversion History**: Track and manage your past conversions
-- 📈 **Analytics**: View detailed statistics about your usage
-- 💾 **Download & Share**: Download audio files for offline use
-- 🔄 **Real-time Conversion**: Instant text-to-speech conversion
-- ♾️ **Unlimited Text**: No character limits - convert any amount of text
-- 🎨 **Beautiful Design**: Modern, intuitive user interface
-- 📱 **Mobile Responsive**: Works perfectly on all devices
 
 ## 🛠️ Tech Stack
 
 <div align="center">
 
-### Frontend Technologies
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-
-### Backend Technologies
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
+| Category | Technology |
+|----------|------------|
+| **Backend** | Node.js, Express.js |
+| **Frontend** | React.js, Vite |
+| **AI Service** | OpenAI TTS-1 |
+| **Database** | MongoDB Atlas |
+| **Styling** | Tailwind CSS |
+| **Icons** | Lucide React |
+| **Package Manager** | npm |
 
 </div>
-
-### 📱 Frontend
-- **React 18** with Vite for fast development
-- **Tailwind CSS** for modern, responsive styling
-- **React Router** for navigation
-- **Axios** for API communication
-- **Lucide React** for beautiful icons
-- **React Hot Toast** for notifications
-
-### 🔧 Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose for data persistence
-- **OpenAI API** for text-to-speech conversion
-- **Multer** for file handling
-- **Helmet** for security headers
-- **Rate limiting** for API protection
 
 ## 📋 Prerequisites
 
-Before running this project, make sure you have:
+- ✅ Node.js (v16 or higher)
+- ✅ npm or yarn
+- ✅ OpenAI API key (paid account required)
+- ✅ MongoDB Atlas account (or local MongoDB)
 
-<div align="center">
+## 🚀 Quick Start
 
-| Requirement | Version | Link |
-|-------------|---------|------|
-| **Node.js** | v16 or higher | [Download](https://nodejs.org/) |
-| **MongoDB** | Atlas or Local | [MongoDB Atlas](https://mongodb.com/atlas) |
-| **OpenAI API Key** | Required | [Get API Key](https://platform.openai.com/) |
-
-</div>
-
-### 🔑 Required Accounts
-- **OpenAI Account**: For TTS API access
-- **MongoDB Atlas Account**: For cloud database (optional - can use local MongoDB)
-
-## 🚀 Installation
-
-<div align="center">
-
-### Quick Start
-
+### 1. Clone the Repository
 ```bash
-# Clone the repository
-git clone <repository-url>
+git clone <your-repo-url>
 cd texttoaudio
+```
 
-# Install all dependencies
+### 2. Install Dependencies
+```bash
+# Install all dependencies (frontend + backend)
 npm run setup
+```
 
-# Start the application
+### 3. Configure Environment Variables
+Create or update `server/.env` file:
+```env
+PORT=5000
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/texttoaudio
+OPENAI_API_KEY=your_openai_api_key_here
+NODE_ENV=development
+```
+
+### 4. Run the Application
+
+#### Development Mode
+```bash
+# Start both frontend and backend
 npm run dev
 ```
 
-</div>
-
-### 📦 Step-by-Step Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd texttoaudio
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm run install-all
-   ```
-
-3. **Environment Setup**
-   
-   Create a `.env` file in the `server` directory:
-   ```bash
-   cd server
-   cp env.example .env
-   ```
-   
-   Edit the `.env` file with your configuration:
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/texttoaudio
-   OPENAI_API_KEY=your_openai_api_key_here
-   NODE_ENV=development
-   ```
-
-4. **Start MongoDB**
-   
-   Make sure MongoDB is running on your system. If using MongoDB Atlas, update the `MONGODB_URI` in your `.env` file.
-
-### ⚡ Quick Setup Script
-
-We provide an automated setup script that handles everything for you:
-
+#### Production Mode
 ```bash
-npm run setup
+# Build the React app
+npm run build
+
+# Start production server
+cd server && npm start
 ```
 
-This script will:
-- ✅ Install all dependencies
-- ✅ Create necessary directories
-- ✅ Set up environment files
-- ✅ Verify Node.js version
+### 5. Access the Application
+- 🌐 **Frontend**: http://localhost:3000
+- 🔧 **Backend API**: http://localhost:5000
+- 💚 **Health Check**: http://localhost:5000/api/health
 
 ## Running the Application
 
@@ -324,6 +259,4 @@ For support and questions:
 
 - OpenAI for providing the TTS API
 - React and Vite teams for the excellent development tools
-- Tailwind CSS for the utility-first CSS framework #   T e x t - t o - A u d i o - c o n v e r t 
- 
- 
+- Tailwind CSS for the utility-first CSS framework
