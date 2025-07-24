@@ -1,13 +1,14 @@
-const express = require('express')
-const cors = require('cors');
-const mongoose = require('mongoose');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const compression = require('compression');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import compression from 'compression';
+import dotenv from 'dotenv';
+import audioRoutes from './routes/audio.js';
+import historyRoutes from './routes/history.js';
 
-const audioRoutes = require('./routes/audio');
-const historyRoutes = require('./routes/history');
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

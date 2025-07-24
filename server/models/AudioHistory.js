@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const audioHistorySchema = new mongoose.Schema({
   text: {
@@ -9,7 +9,7 @@ const audioHistorySchema = new mongoose.Schema({
   voice: {
     type: String,
     required: true,
-    enum: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']
+    enum: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer', 'priya', 'meera', 'anjali', 'kavya', 'diya', 'zara', 'neha', 'isha', 'riya', 'aisha', 'maya', 'sana']
   },
   audioUrl: {
     type: String,
@@ -33,4 +33,4 @@ const audioHistorySchema = new mongoose.Schema({
 audioHistorySchema.index({ createdAt: -1 });
 audioHistorySchema.index({ voice: 1 });
 
-module.exports = mongoose.model('AudioHistory', audioHistorySchema); 
+export default mongoose.model('AudioHistory', audioHistorySchema); 

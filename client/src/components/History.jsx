@@ -91,7 +91,19 @@ const History = () => {
     fable: 'Fable',
     onyx: 'Onyx',
     nova: 'Nova',
-    shimmer: 'Shimmer'
+    shimmer: 'Shimmer',
+    priya: 'Priya',
+    meera: 'Meera',
+    anjali: 'Anjali',
+    kavya: 'Kavya',
+    diya: 'Diya',
+    zara: 'Zara',
+    neha: 'Neha',
+    isha: 'Isha',
+    riya: 'Riya',
+    aisha: 'Aisha',
+    maya: 'Maya',
+    sana: 'Sana'
   }
 
   if (loading) {

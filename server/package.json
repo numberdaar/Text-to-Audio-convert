@@ -2,6 +2,7 @@
   "name": "texttoaudio-server",
   "version": "1.0.0",
   "description": "Backend server for text to audio conversion",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

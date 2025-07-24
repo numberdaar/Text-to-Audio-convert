@@ -1,5 +1,5 @@
-const express = require('express');
-const AudioHistory = require('../models/AudioHistory');
+import express from 'express';
+import AudioHistory from '../models/AudioHistory.js';
 
 const router = express.Router();
 
@@ -132,4 +132,4 @@ router.delete('/', async (req, res) => {
   }
 });
 
-module.exports = router; 
+export default router; 

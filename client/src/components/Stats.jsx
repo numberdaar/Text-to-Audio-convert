@@ -30,7 +30,19 @@ const Stats = () => {
     fable: 'Fable',
     onyx: 'Onyx',
     nova: 'Nova',
-    shimmer: 'Shimmer'
+    shimmer: 'Shimmer',
+    priya: 'Priya',
+    meera: 'Meera',
+    anjali: 'Anjali',
+    kavya: 'Kavya',
+    diya: 'Diya',
+    zara: 'Zara',
+    neha: 'Neha',
+    isha: 'Isha',
+    riya: 'Riya',
+    aisha: 'Aisha',
+    maya: 'Maya',
+    sana: 'Sana'
   }
 
   const voiceColors = {
@@ -39,7 +51,19 @@ const Stats = () => {
     fable: 'bg-purple-500',
     onyx: 'bg-gray-700',
     nova: 'bg-yellow-500',
-    shimmer: 'bg-pink-500'
+    shimmer: 'bg-pink-500',
+    priya: 'bg-pink-400',
+    meera: 'bg-purple-400',
+    anjali: 'bg-orange-400',
+    kavya: 'bg-yellow-400',
+    diya: 'bg-red-400',
+    zara: 'bg-indigo-400',
+    neha: 'bg-rose-400',
+    isha: 'bg-emerald-400',
+    riya: 'bg-cyan-400',
+    aisha: 'bg-violet-400',
+    maya: 'bg-amber-400',
+    sana: 'bg-teal-400'
   }
 
   const formatDuration = (seconds) => {
