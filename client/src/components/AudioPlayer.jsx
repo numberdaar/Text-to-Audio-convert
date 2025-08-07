@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
 
-const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
+const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration, playbackRate = 1.0, setPlaybackRate, onEnded }) => {
   const audioRef = useRef(null)
   const [currentTime, setCurrentTime] = useState(0)
   const [volume, setVolume] = useState(1)
@@ -11,7 +11,10 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
     if (!audio) return
 
     const updateTime = () => setCurrentTime(audio.currentTime)
-    const handleEnded = () => setIsPlaying(false)
+    const handleEnded = () => {
+      setIsPlaying(false)
+      if (onEnded) onEnded()
+    }
 
     audio.addEventListener('timeupdate', updateTime)
     audio.addEventListener('ended', handleEnded)
@@ -20,7 +23,7 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
       audio.removeEventListener('timeupdate', updateTime)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, [setIsPlaying])
+  }, [setIsPlaying, onEnded])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -32,6 +35,13 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
       audio.pause()
     }
   }, [isPlaying])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.playbackRate = playbackRate
+    }
+  }, [playbackRate])
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying)
@@ -56,6 +66,11 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
     }
   }
 
+  const handleRateChange = (e) => {
+    const newRate = parseFloat(e.target.value)
+    if (setPlaybackRate) setPlaybackRate(newRate)
+  }
+
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
@@ -65,7 +80,6 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
   return (
     <div className="space-y-4">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
-      
       {/* Play/Pause Button */}
       <div className="flex justify-center">
         <button
@@ -79,7 +93,6 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
           )}
         </button>
       </div>
-
       {/* Progress Bar */}
       <div className="space-y-2">
         <div
@@ -96,24 +109,42 @@ const AudioPlayer = ({ audioUrl, isPlaying, setIsPlaying, duration }) => {
           <span>{formatTime(duration)}</span>
         </div>
       </div>
-
-      {/* Volume Control */}
-      <div className="flex items-center space-x-3">
-        <Volume2 className="w-4 h-4 text-gray-500" />
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-        />
-        <span className="text-sm text-gray-500 w-8">
-          {Math.round(volume * 100)}%
-        </span>
+      {/* Volume and Speed Control */}
+      <div className="space-y-3">
+        {/* Volume Control */}
+        <div className="flex items-center space-x-3">
+          <Volume2 className="w-4 h-4 text-gray-500 flex-shrink-0" />
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+          />
+          <span className="text-sm text-gray-500 w-8 flex-shrink-0">
+            {Math.round(volume * 100)}%
+          </span>
+        </div>
+        
+        {/* Speed Control */}
+        <div className="flex items-center space-x-3">
+          <span className="text-sm text-gray-500 flex-shrink-0">Speed:</span>
+          <select
+            value={playbackRate}
+            onChange={handleRateChange}
+            className="px-3 py-1 border rounded text-sm text-gray-700 bg-white flex-shrink-0"
+          >
+            <option value={0.5}>0.5x</option>
+            <option value={0.75}>0.75x</option>
+            <option value={1.0}>1x</option>
+            <option value={1.25}>1.25x</option>
+            <option value={1.5}>1.5x</option>
+            <option value={2.0}>2x</option>
+          </select>
+        </div>
       </div>
-
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;

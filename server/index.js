@@ -1,14 +1,15 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
-import dotenv from 'dotenv';
 import audioRoutes from './routes/audio.js';
 import historyRoutes from './routes/history.js';
 
-dotenv.config();
+// Debug: Print the OpenAI API key status (masking for security)
+console.log('OPENAI_API_KEY loaded:', !!process.env.OPENAI_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 5000;

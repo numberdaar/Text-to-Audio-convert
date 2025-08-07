@@ -5,70 +5,132 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import AudioHistory from '../models/AudioHistory.js';
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
+
+// Set ffmpeg path with error handling
+const USE_FFMPEG = true; // Set to false to disable FFmpeg
+try {
+  if (USE_FFMPEG) {
+    ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+    console.log('FFmpeg path set successfully:', ffmpegInstaller.path);
+  } else {
+    console.log('FFmpeg disabled, using fallback merge method');
+  }
+} catch (error) {
+  console.error('Error setting FFmpeg path:', error);
+  console.log('FFmpeg installer path:', ffmpegInstaller.path);
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const router = express.Router();
 
-// Helper function to add Indian accent characteristics to text
-function addIndianAccent(text, voiceType) {
-  let processedText = text;
+// Helper function to merge audio files
+async function mergeAudioFiles(audioFiles, outputPath) {
+  return new Promise((resolve, reject) => {
+    // Check if all input files exist
+    for (const file of audioFiles) {
+      if (!fs.existsSync(file)) {
+        return reject(new Error(`Input file not found: ${file}`));
+      }
+    }
+
+    console.log(`Starting to merge ${audioFiles.length} audio files...`);
+    console.log('Input files:', audioFiles);
+    console.log('Output path:', outputPath);
+
+    // If FFmpeg is disabled, use simple merge
+    if (!USE_FFMPEG) {
+      console.log('FFmpeg disabled, using simple merge');
+      simpleAudioMerge(audioFiles, outputPath)
+        .then(resolve)
+        .catch(reject);
+      return;
+    }
+
+    try {
+      const command = ffmpeg();
+      
+      // Add all input files
+      audioFiles.forEach((file, index) => {
+        console.log(`Adding input file ${index + 1}: ${file}`);
+        command.input(file);
+      });
+      
+      // Merge files with proper options
+      command
+        .on('start', (commandLine) => {
+          console.log('FFmpeg command:', commandLine);
+        })
+        .on('progress', (progress) => {
+          console.log('FFmpeg progress:', progress);
+        })
+        .on('end', () => {
+          console.log('Audio files merged successfully');
+          // Verify the output file exists
+          if (fs.existsSync(outputPath)) {
+            console.log('Output file created:', outputPath);
+            resolve(outputPath);
+          } else {
+            reject(new Error('Output file was not created'));
+          }
+        })
+        .on('error', (err) => {
+          console.error('Error merging audio files:', err);
+          reject(err);
+        })
+        .mergeToFile(outputPath, path.dirname(outputPath));
+    } catch (error) {
+      console.error('FFmpeg initialization error:', error);
+      reject(error);
+    }
+  });
+}
+
+// Fallback function if FFmpeg fails
+async function simpleAudioMerge(audioFiles, outputPath) {
+  console.log('Using fallback audio merge method...');
   
-  // Add voice-specific characteristics based on regional accents
+  try {
+    // Read all audio files
+    const audioBuffers = [];
+    for (const file of audioFiles) {
+      const buffer = await fs.readFile(file);
+      audioBuffers.push(buffer);
+    }
+    
+    // Concatenate buffers (simple approach)
+    const mergedBuffer = Buffer.concat(audioBuffers);
+    
+    // Write merged file
+    await fs.writeFile(outputPath, mergedBuffer);
+    
+    console.log('Simple merge completed:', outputPath);
+    return outputPath;
+  } catch (error) {
+    console.error('Simple merge failed:', error);
+    throw error;
+  }
+}
+
+// Helper function to add Hindi tone characteristics to text
+function addHindiTone(text, voiceType) {
+  let processedText = text;
   switch(voiceType) {
-    case 'priya':
-      // Sweet Hindi accent - North Indian, warm and friendly
-      processedText = `[Speaking in a sweet, warm Hindi accent with gentle intonation] ${text}`;
+    case 'politic':
+      processedText = `[Speaking in a confident, persuasive Hindi female political tone] ${text}`;
       break;
-    case 'meera':
-      // Elegant Bengali accent - East Indian, sophisticated and cultured
-      processedText = `[Speaking in an elegant, sophisticated Bengali accent with refined pronunciation] ${text}`;
+    case 'romantic':
+      processedText = `[Speaking in a soft, romantic Hindi female tone] ${text}`;
       break;
-    case 'anjali':
-      // Warm Tamil accent - South Indian, welcoming and melodic
-      processedText = `[Speaking in a warm, welcoming Tamil accent with musical intonation] ${text}`;
-      break;
-    case 'kavya':
-      // Melodic Telugu accent - South Indian, expressive and rhythmic
-      processedText = `[Speaking in a melodic, expressive Telugu accent with rhythmic flow] ${text}`;
-      break;
-    case 'diya':
-      // Bright Punjabi accent - North Indian, energetic and cheerful
-      processedText = `[Speaking in a bright, cheerful Punjabi accent with energetic tone] ${text}`;
-      break;
-    case 'zara':
-      // Modern Gujarati accent - West Indian, confident and business-like
-      processedText = `[Speaking in a modern, confident Gujarati accent with professional tone] ${text}`;
-      break;
-    case 'neha':
-      // Soft Marathi accent - West Indian, gentle and soothing
-      processedText = `[Speaking in a soft, gentle Marathi accent with soothing intonation] ${text}`;
-      break;
-    case 'isha':
-      // Gentle Malayalam accent - South Indian, calm and peaceful
-      processedText = `[Speaking in a gentle, calm Malayalam accent with peaceful tone] ${text}`;
-      break;
-    case 'riya':
-      // Charming Kannada accent - South Indian, attractive and engaging
-      processedText = `[Speaking in a charming, engaging Kannada accent with attractive intonation] ${text}`;
-      break;
-    case 'aisha':
-      // Graceful Kashmiri accent - North Indian, elegant and refined
-      processedText = `[Speaking in a graceful, refined Kashmiri accent with elegant pronunciation] ${text}`;
-      break;
-    case 'maya':
-      // Vibrant Assamese accent - East Indian, lively and dynamic
-      processedText = `[Speaking in a vibrant, dynamic Assamese accent with lively tone] ${text}`;
-      break;
-    case 'sana':
-      // Elegant Odia accent - East Indian, sophisticated and cultured
-      processedText = `[Speaking in an elegant, sophisticated Odia accent with cultured pronunciation] ${text}`;
+    case 'cute':
+      processedText = `[Speaking in a cute, playful Hindi female tone] ${text}`;
       break;
     default:
       processedText = text;
   }
-  
   return processedText;
 }
 
@@ -140,19 +202,10 @@ const AVAILABLE_VOICES = [
   { id: 'onyx', name: 'Onyx', description: 'Deep and authoritative', category: 'standard' },
   { id: 'nova', name: 'Nova', description: 'Bright and energetic', category: 'standard' },
   { id: 'shimmer', name: 'Shimmer', description: 'Soft and melodic', category: 'standard' },
-  // Indian female voices with different characteristics
-  { id: 'priya', name: 'Priya', description: 'Sweet Hindi accent', category: 'indian' },
-  { id: 'meera', name: 'Meera', description: 'Elegant Bengali accent', category: 'indian' },
-  { id: 'anjali', name: 'Anjali', description: 'Warm Tamil accent', category: 'indian' },
-  { id: 'kavya', name: 'Kavya', description: 'Melodic Telugu accent', category: 'indian' },
-  { id: 'diya', name: 'Diya', description: 'Bright Punjabi accent', category: 'indian' },
-  { id: 'zara', name: 'Zara', description: 'Modern Gujarati accent', category: 'indian' },
-  { id: 'neha', name: 'Neha', description: 'Soft Marathi accent', category: 'indian' },
-  { id: 'isha', name: 'Isha', description: 'Gentle Malayalam accent', category: 'indian' },
-  { id: 'riya', name: 'Riya', description: 'Charming Kannada accent', category: 'indian' },
-  { id: 'aisha', name: 'Aisha', description: 'Graceful Kashmiri accent', category: 'indian' },
-  { id: 'maya', name: 'Maya', description: 'Vibrant Assamese accent', category: 'indian' },
-  { id: 'sana', name: 'Sana', description: 'Elegant Odia accent', category: 'indian' }
+  // Hindi female voices with different tones
+  { id: 'politic', name: 'Politic', description: 'Confident, persuasive Hindi female tone', category: 'hindi' },
+  { id: 'romantic', name: 'Romantic', description: 'Soft, romantic Hindi female tone', category: 'hindi' },
+  { id: 'cute', name: 'Cute', description: 'Cute, playful Hindi female tone', category: 'hindi' }
 ];
 
 // Get available voices
@@ -171,8 +224,6 @@ router.post('/convert', async (req, res) => {
       return res.status(400).json({ error: 'Text is required' });
     }
 
-    // No text length limit - removed for unlimited text conversion
-
     if (!AVAILABLE_VOICES.find(v => v.id === voice)) {
       return res.status(400).json({ error: 'Invalid voice selected' });
     }
@@ -187,46 +238,39 @@ router.post('/convert', async (req, res) => {
     
     let audioFiles = [];
     let totalDuration = 0;
+    let audioFilePaths = []; // Store file paths for merging
     
     // Process each chunk
     for (let i = 0; i < textChunks.length; i++) {
       const chunk = textChunks[i];
       let processedText = chunk;
       
-      // Handle Indian voices with special processing
-      if (voice.startsWith('priya') || voice.startsWith('meera') || voice.startsWith('anjali') || 
-          voice.startsWith('kavya') || voice.startsWith('diya') || voice.startsWith('zara') ||
-          voice.startsWith('neha') || voice.startsWith('isha') || voice.startsWith('riya') ||
-          voice.startsWith('aisha') || voice.startsWith('maya') || voice.startsWith('sana')) {
-        // For Indian voices, use a base voice and add Indian accent characteristics
-        const baseVoice = 'nova'; // Use Nova as base for Indian voices
-        processedText = addIndianAccent(chunk, voice);
-        
+      // Handle Hindi female tones
+      if (voice === 'politic' || voice === 'romantic' || voice === 'cute') {
+        // Use Nova as base for Hindi voices
+        const baseVoice = 'nova';
+        processedText = addHindiTone(chunk, voice);
         const mp3 = await openai.audio.speech.create({
           model: "tts-1",
           voice: baseVoice,
           input: processedText,
         });
-        
         // Save the audio file
         const timestamp = Date.now();
         const filename = `audio_${timestamp}_${Math.random().toString(36).substr(2, 9)}_part${i + 1}.mp3`;
         const filepath = path.join(audioDir, filename);
-        
         const buffer = Buffer.from(await mp3.arrayBuffer());
         await fs.writeFile(filepath, buffer);
-        
         // Get file stats for duration (approximate)
         const stats = await fs.stat(filepath);
         const duration = Math.ceil(stats.size / 16000); // Rough estimation
-        
         audioFiles.push({
           filename: filename,
           url: `/api/audio/${filename}`,
           duration: duration,
           text: chunk.substring(0, 100) + (chunk.length > 100 ? '...' : '')
         });
-        
+        audioFilePaths.push(filepath);
         totalDuration += duration;
       } else {
         // Standard voices
@@ -235,27 +279,75 @@ router.post('/convert', async (req, res) => {
           voice: voice,
           input: processedText,
         });
-        
         // Save the audio file
         const timestamp = Date.now();
         const filename = `audio_${timestamp}_${Math.random().toString(36).substr(2, 9)}_part${i + 1}.mp3`;
         const filepath = path.join(audioDir, filename);
-        
         const buffer = Buffer.from(await mp3.arrayBuffer());
         await fs.writeFile(filepath, buffer);
-        
         // Get file stats for duration (approximate)
         const stats = await fs.stat(filepath);
         const duration = Math.ceil(stats.size / 16000); // Rough estimation
-        
         audioFiles.push({
           filename: filename,
           url: `/api/audio/${filename}`,
           duration: duration,
           text: chunk.substring(0, 100) + (chunk.length > 100 ? '...' : '')
         });
-        
+        audioFilePaths.push(filepath);
         totalDuration += duration;
+      }
+    }
+
+    // Merge audio files if there are multiple parts
+    let mergedAudioFile = null;
+    if (audioFiles.length > 1) {
+      try {
+        console.log(`Attempting to merge ${audioFiles.length} audio files...`);
+        console.log('Audio file paths:', audioFilePaths);
+        
+        // Verify all files exist before merging
+        for (const filePath of audioFilePaths) {
+          if (!fs.existsSync(filePath)) {
+            throw new Error(`Audio file not found: ${filePath}`);
+          }
+        }
+        
+        const timestamp = Date.now();
+        const mergedFilename = `audio_${timestamp}_${Math.random().toString(36).substr(2, 9)}_merged.mp3`;
+        const mergedFilepath = path.join(audioDir, mergedFilename);
+        
+        console.log('Merging to:', mergedFilepath);
+        
+        // Try FFmpeg first, fallback to simple merge if it fails
+        try {
+          await mergeAudioFiles(audioFilePaths, mergedFilepath);
+        } catch (ffmpegError) {
+          console.error('FFmpeg merge failed, trying fallback:', ffmpegError);
+          await simpleAudioMerge(audioFilePaths, mergedFilepath);
+        }
+        
+        // Verify the merged file was created
+        if (fs.existsSync(mergedFilepath)) {
+          const mergedStats = await fs.stat(mergedFilepath);
+          console.log('Merged file size:', mergedStats.size, 'bytes');
+          
+          mergedAudioFile = {
+            filename: mergedFilename,
+            url: `/api/audio/${mergedFilename}`,
+            duration: totalDuration,
+            text: text.substring(0, 100) + (text.length > 100 ? '...' : '')
+          };
+          
+          console.log('Successfully created merged audio file:', mergedAudioFile);
+        } else {
+          throw new Error('Merged file was not created');
+        }
+      } catch (error) {
+        console.error('Failed to merge audio files:', error);
+        console.error('Error details:', error.message);
+        // Continue without merged file if merging fails
+        // The individual parts will still be available
       }
     }
 
@@ -272,10 +364,11 @@ router.post('/convert', async (req, res) => {
       await audioHistory.save();
     }
 
-    // Return response with all audio files
+    // Return response with all audio files and merged file
     res.json({
       success: true,
       audioFiles: audioFiles,
+      mergedAudioFile: mergedAudioFile,
       totalDuration: totalDuration,
       totalParts: audioFiles.length,
       voice,

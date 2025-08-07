@@ -9,7 +9,7 @@ const audioHistorySchema = new mongoose.Schema({
   voice: {
     type: String,
     required: true,
-    enum: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer', 'priya', 'meera', 'anjali', 'kavya', 'diya', 'zara', 'neha', 'isha', 'riya', 'aisha', 'maya', 'sana']
+    enum: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer', 'politic', 'romantic', 'cute']
   },
   audioUrl: {
     type: String,

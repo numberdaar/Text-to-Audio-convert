@@ -92,23 +92,14 @@ const History = () => {
     onyx: 'Onyx',
     nova: 'Nova',
     shimmer: 'Shimmer',
-    priya: 'Priya',
-    meera: 'Meera',
-    anjali: 'Anjali',
-    kavya: 'Kavya',
-    diya: 'Diya',
-    zara: 'Zara',
-    neha: 'Neha',
-    isha: 'Isha',
-    riya: 'Riya',
-    aisha: 'Aisha',
-    maya: 'Maya',
-    sana: 'Sana'
+    politic: 'Politic',
+    romantic: 'Romantic',
+    cute: 'Cute'
   }
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4">
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading history...</p>
@@ -118,17 +109,17 @@ const History = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 px-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Conversion History</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Conversion History</h1>
           <p className="text-gray-600 mt-2">View and manage your past audio conversions</p>
         </div>
         {history.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="btn-secondary flex items-center space-x-2"
+            className="btn-secondary flex items-center justify-center space-x-2 w-full sm:w-auto"
           >
             <Trash2 className="w-4 h-4" />
             <span>Clear All</span>
@@ -138,7 +129,7 @@ const History = () => {
 
       {/* Filters */}
       <div className="card">
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
           <div className="flex items-center space-x-2">
             <Filter className="w-4 h-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">Filter by voice:</span>
@@ -146,7 +137,7 @@ const History = () => {
           <select
             value={selectedVoice}
             onChange={(e) => setSelectedVoice(e.target.value)}
-            className="input-field max-w-xs"
+            className="input-field w-full sm:max-w-xs"
           >
             <option value="">All voices</option>
             {Object.entries(voiceNames).map(([key, name]) => (
@@ -167,30 +158,37 @@ const History = () => {
         <div className="space-y-4">
           {history.map((item) => (
             <div key={item._id} className="card">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <span className="px-2 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">
-                      {voiceNames[item.voice]}
+              <div className="space-y-4">
+                {/* Header with voice and date */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                    <span className="px-2 py-1 bg-primary-100 text-primary-700 text-sm rounded-full w-fit">
+                      {voiceNames[item.voice] || item.voice}
                     </span>
                     <span className="text-sm text-gray-500">
                       {formatDate(item.createdAt)}
                     </span>
                   </div>
+                </div>
+                
+                {/* Text content */}
+                <div className="break-words">
+                  <p className="text-gray-900 text-sm sm:text-base leading-relaxed">{item.text}</p>
+                </div>
+                
+                {/* Audio player and buttons */}
+                <div className="space-y-3">
+                  <AudioPlayer
+                    audioUrl={item.audioUrl}
+                    isPlaying={playingId === item._id}
+                    setIsPlaying={(playing) => setPlayingId(playing ? item._id : null)}
+                    duration={item.duration}
+                  />
                   
-                  <p className="text-gray-900">{item.text}</p>
-                  
-                  <div className="flex items-center space-x-4">
-                    <AudioPlayer
-                      audioUrl={item.audioUrl}
-                      isPlaying={playingId === item._id}
-                      setIsPlaying={(playing) => setPlayingId(playing ? item._id : null)}
-                      duration={item.duration}
-                    />
-                    
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <button
                       onClick={() => handleDownload(item.audioUrl)}
-                      className="btn-secondary flex items-center space-x-2"
+                      className="btn-secondary flex items-center justify-center space-x-2 w-full sm:w-auto"
                     >
                       <Download className="w-4 h-4" />
                       <span>Download</span>
@@ -198,7 +196,7 @@ const History = () => {
                     
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="text-red-600 hover:text-red-700 flex items-center space-x-2"
+                      className="text-red-600 hover:text-red-700 flex items-center justify-center space-x-2 w-full sm:w-auto py-2 px-4 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                       <span>Delete</span>
@@ -213,23 +211,23 @@ const History = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
           >
             Previous
           </button>
           
-          <span className="text-gray-600">
+          <span className="text-gray-600 text-center">
             Page {currentPage} of {totalPages}
           </span>
           
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
           >
             Next
           </button>
